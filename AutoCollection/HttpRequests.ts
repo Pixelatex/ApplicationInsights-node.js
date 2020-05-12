@@ -148,14 +148,6 @@ class AutoCollectHttpRequests {
 
         const originalHttpServer = http.createServer;    
 
-        // createServer(server);
-        // createServer();
-        // createServer({ options }, server);
-        // (options?, onrequest)
-        // ...vars
-
-        // function overloadedCreateServer(options?: Object, onRequest:Function): any[];
-        // function overloadedCreateServer (onRequest: Function): any[];
         function createServer(onRequest?: Function): any;
         function createServer(options?: Object, onRequest?: Function): any;
         function createServer(...vars: any[]) {
