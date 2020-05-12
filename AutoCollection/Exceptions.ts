@@ -38,15 +38,16 @@ class AutoCollectExceptions {
     public isInitialized() {
         return this._isInitialized;
     }
-
     public enable(isEnabled: boolean) {
         if (isEnabled) {
             this._isInitialized = true;
             var self = this;
             if (!this._exceptionListenerHandle) {
+
                 // For scenarios like Promise.reject(), an error won't be passed to the handle. Create a placeholder
-                // error for these scenarios.
-                var handle = (reThrow: boolean, name: string, error: Error = new Error(AutoCollectExceptions._FALLBACK_ERROR_MESSAGE)) => {
+                // error for these scenarios.§
+                // Use any for name as the overloads don't accept a pipe of the possible values as type
+                var handle = (reThrow: boolean, name: any, error: Error = new Error(AutoCollectExceptions._FALLBACK_ERROR_MESSAGE)) => {
                     this._client.trackException({ exception: error });
                     this._client.flush({ isAppCrashing: true });
                     // only rethrow when we are the only listener
@@ -59,7 +60,7 @@ class AutoCollectExceptions {
                 if (AutoCollectExceptions._canUseUncaughtExceptionMonitor) {
                     // Node.js >= 13.7.0, use uncaughtExceptionMonitor. It handles both promises and exceptions
                     this._exceptionListenerHandle = handle.bind(this, false, undefined); // never rethrows
-                    process.on(AutoCollectExceptions.UNCAUGHT_EXCEPTION_MONITOR_HANDLER_NAME, this._exceptionListenerHandle);
+                    process.on((AutoCollectExceptions.UNCAUGHT_EXCEPTION_MONITOR_HANDLER_NAME), this._exceptionListenerHandle);
                 } else {
                     this._exceptionListenerHandle = handle.bind(this, true, AutoCollectExceptions.UNCAUGHT_EXCEPTION_HANDLER_NAME);
                     this._rejectionListenerHandle = handle.bind(this, false, undefined); // never rethrows

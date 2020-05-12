@@ -154,7 +154,7 @@ class AutoCollectHttpRequests {
             if(typeof vars[0] === 'object') {
                 const options = vars[0];
                 const onRequest = vars[1];
-                const server: http.Server = originalHttpServer(options, wrapOnRequestHandler(onRequest));
+                const server: http.Server = originalHttpServer(wrapOnRequestHandler(options, onRequest));
                 wrapServerEventHandler(server);
                 return server
             } else {

@@ -67,7 +67,7 @@ class AutoCollectHttpDependencies {
 
             if (request && options && shouldCollect) {
                 CorrelationContextManager.wrapEmitter(request);
-                AutoCollectHttpDependencies.trackRequest(this._client, {options: options, request: request});
+                AutoCollectHttpDependencies.trackRequest(this._client, {options: (options as any), request: request});
             }
         };
 
@@ -75,13 +75,13 @@ class AutoCollectHttpDependencies {
         // On node < 0.11.12, 8.9.0, and 9.0 > https.request is handled separately
         // Patch both and leave a flag to not double-count on versions that just call through
         // We add the flag to both http and https to protect against strange double collection in other scenarios
-        http.request = (options, ...requestArgs: any[]) => {
+        http.request = (options: any, ...requestArgs: any[]) => {
             const request: http.ClientRequest = originalRequest.call(http, options, ...requestArgs);
             clientRequestPatch(request, options);
             return request;
         };
 
-        https.request = (options, ...requestArgs: any[]) => {
+        https.request = (options: any, ...requestArgs: any[]) => {
             const request: http.ClientRequest = originalHttpsRequest.call(https, options, ...requestArgs);
             clientRequestPatch(request, options);
             return request;
@@ -91,12 +91,12 @@ class AutoCollectHttpDependencies {
         // We have to patch .get manually in this case and can't just assume request is enough
         // We have to replace the entire method in this case. We can't call the original.
         // This is because calling the original will give us no chance to set headers as it internally does .end().
-        http.get = (options, ...requestArgs: any[]) => {
+        http.get = (options: any, ...requestArgs: any[]) => {
             const request: http.ClientRequest = http.request.call(http, options, ...requestArgs);
             request.end();
             return request;
         };
-        https.get = (options, ...requestArgs: any[]) => {
+        https.get = (options: any, ...requestArgs: any[]) => {
             const request: http.ClientRequest = https.request.call(https, options, ...requestArgs);
             request.end();
             return request;

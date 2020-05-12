@@ -238,13 +238,13 @@ class HttpRequestParser extends RequestParser {
         this.sourceCorrelationId = Util.getCorrelationContextTarget(request, RequestResponseHeaders.requestContextSourceKey);
 
         if (request.headers) {
-            const tracestateHeader = request.headers[RequestResponseHeaders.traceStateHeader]; // w3c header
-            const traceparentHeader = request.headers[RequestResponseHeaders.traceparentHeader]; // w3c header
-            const requestIdHeader = request.headers[RequestResponseHeaders.requestIdHeader]; // default AI header
-            const legacy_parentId = request.headers[RequestResponseHeaders.parentIdHeader]; // legacy AI header
-            const legacy_rootId = request.headers[RequestResponseHeaders.rootIdHeader]; // legacy AI header
+            const tracestateHeader = request.headers[RequestResponseHeaders.traceStateHeader] as string; // w3c header
+            const traceparentHeader = request.headers[RequestResponseHeaders.traceparentHeader] as string; // w3c header
+            const requestIdHeader = request.headers[RequestResponseHeaders.requestIdHeader] as string; // default AI header
+            const legacy_parentId = request.headers[RequestResponseHeaders.parentIdHeader] as string; // legacy AI header
+            const legacy_rootId = request.headers[RequestResponseHeaders.rootIdHeader] as string; // legacy AI header
 
-            this.correlationContextHeader = request.headers[RequestResponseHeaders.correlationContextHeader];
+            this.correlationContextHeader = request.headers[RequestResponseHeaders.correlationContextHeader] as string;
 
             if (CorrelationIdManager.w3cEnabled && (traceparentHeader || tracestateHeader)) {
                 // Parse W3C Trace Context headers
