@@ -6,7 +6,6 @@ import TelemetryClient = require("../Library/TelemetryClient");
 import Sender = require("../Library/Sender");
 import Queue = require("../Library/Channel");
 import Util = require("../Library/Util");
-
 class AutoCollectExceptions {
 
     public static INSTANCE: AutoCollectExceptions = null;
@@ -60,12 +59,12 @@ class AutoCollectExceptions {
                 if (AutoCollectExceptions._canUseUncaughtExceptionMonitor) {
                     // Node.js >= 13.7.0, use uncaughtExceptionMonitor. It handles both promises and exceptions
                     this._exceptionListenerHandle = handle.bind(this, false, undefined); // never rethrows
-                    process.on((AutoCollectExceptions.UNCAUGHT_EXCEPTION_MONITOR_HANDLER_NAME), this._exceptionListenerHandle);
+                    process.on((AutoCollectExceptions.UNCAUGHT_EXCEPTION_MONITOR_HANDLER_NAME as any), this._exceptionListenerHandle);
                 } else {
                     this._exceptionListenerHandle = handle.bind(this, true, AutoCollectExceptions.UNCAUGHT_EXCEPTION_HANDLER_NAME);
                     this._rejectionListenerHandle = handle.bind(this, false, undefined); // never rethrows
-                    process.on(AutoCollectExceptions.UNCAUGHT_EXCEPTION_HANDLER_NAME, this._exceptionListenerHandle);
-                    process.on(AutoCollectExceptions.UNHANDLED_REJECTION_HANDLER_NAME, this._rejectionListenerHandle);
+                    process.on(AutoCollectExceptions.UNCAUGHT_EXCEPTION_HANDLER_NAME as any, this._exceptionListenerHandle);
+                    process.on(AutoCollectExceptions.UNHANDLED_REJECTION_HANDLER_NAME as any, this._rejectionListenerHandle);
                 }
             }
 
